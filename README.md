@@ -1,274 +1,27 @@
-## Drought stress in the Amazon rainforest 
-## An evaluation of different drought metrics and datasets
-#The code behind
+<p style="text-align: center; font-size: x-large;"> Drought stress in the Amazon rainforest </p>
+
+<p style="text-align: center; font-size: large;"> An evaluation of different drought metrics and datasets </p>
+
+<p style="text-align: center; font-size: medium;"> The code behind </p>
+
+#Preparation
 
 
 ```r
 library(SPEI)
-```
-
-```
-## Warning: package 'SPEI' was built under R version 3.4.4
-```
-
-```
-## Loading required package: lmomco
-```
-
-```
-## Warning: package 'lmomco' was built under R version 3.4.4
-```
-
-```
-## Loading required package: parallel
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 3.4.4
-```
-
-```
-## # Package SPEI (1.7) loaded [try SPEINews()].
-```
-
-```r
 library(tidyverse)
-```
-
-```
-## Warning: package 'tidyverse' was built under R version 3.4.4
-```
-
-```
-## -- Attaching packages ---------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
-```
-
-```
-## v tibble  1.4.2     v purrr   0.2.4
-## v tidyr   0.8.0     v dplyr   0.7.4
-## v readr   1.1.1     v stringr 1.2.0
-## v tibble  1.4.2     v forcats 0.2.0
-```
-
-```
-## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-```
-
-```r
 library(ncdf4)
 library(lubridate)
-```
-
-```
-## Warning: package 'lubridate' was built under R version 3.4.4
-```
-
-```
-## 
-## Attaching package: 'lubridate'
-```
-
-```
-## The following object is masked from 'package:base':
-## 
-##     date
-```
-
-```r
 library(regmap)
-```
-
-```
-## Loading required package: PBSmapping
-```
-
-```
-## 
-## -----------------------------------------------------------
-## PBS Mapping 2.70.4 -- Copyright (C) 2003-2018 Fisheries and Oceans Canada
-## 
-## PBS Mapping comes with ABSOLUTELY NO WARRANTY;
-## for details see the file COPYING.
-## This is free software, and you are welcome to redistribute
-## it under certain conditions, as outlined in the above file.
-## 
-## A complete user guide 'PBSmapping-UG.pdf' is located at 
-## C:/Users/Jupiter/Documents/R/win-library/3.4/PBSmapping/doc/PBSmapping-UG.pdf
-## 
-## Packaged on 2017-06-28
-## Pacific Biological Station, Nanaimo
-## 
-## All available PBS packages can be found at
-## https://github.com/pbs-software
-## 
-## To see demos, type '.PBSfigs()'.
-## -----------------------------------------------------------
-```
-
-```
-## Loading required package: maps
-```
-
-```
-## 
-## Attaching package: 'maps'
-```
-
-```
-## The following object is masked from 'package:purrr':
-## 
-##     map
-```
-
-```
-## Loading required package: data.table
-```
-
-```
-## Warning: package 'data.table' was built under R version 3.4.4
-```
-
-```
-## 
-## Attaching package: 'data.table'
-```
-
-```
-## The following objects are masked from 'package:lubridate':
-## 
-##     hour, isoweek, mday, minute, month, quarter, second, wday,
-##     week, yday, year
-```
-
-```
-## The following objects are masked from 'package:dplyr':
-## 
-##     between, first, last
-```
-
-```
-## The following object is masked from 'package:purrr':
-## 
-##     transpose
-```
-
-```r
 library(ggpubr)
-```
-
-```
-## Warning: package 'ggpubr' was built under R version 3.4.4
-```
-
-```
-## Loading required package: magrittr
-```
-
-```
-## 
-## Attaching package: 'magrittr'
-```
-
-```
-## The following object is masked from 'package:purrr':
-## 
-##     set_names
-```
-
-```
-## The following object is masked from 'package:tidyr':
-## 
-##     extract
-```
-
-```r
 library(cowplot)
-```
-
-```
-## Warning: package 'cowplot' was built under R version 3.4.4
-```
-
-```
-## 
-## Attaching package: 'cowplot'
-```
-
-```
-## The following object is masked from 'package:ggpubr':
-## 
-##     get_legend
-```
-
-```
-## The following object is masked from 'package:ggplot2':
-## 
-##     ggsave
-```
-
-```r
 library(GGally)
-```
-
-```
-## Warning: package 'GGally' was built under R version 3.4.4
-```
-
-```
-## 
-## Attaching package: 'GGally'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     nasa
-```
-
-```r
 library(corrplot)
-```
-
-```
-## Warning: package 'corrplot' was built under R version 3.4.4
-```
-
-```
-## corrplot 0.84 loaded
-```
-
-```r
 library(gridExtra)
-```
-
-```
-## Warning: package 'gridExtra' was built under R version 3.4.4
-```
-
-```
-## 
-## Attaching package: 'gridExtra'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
-
-```r
 library(pcaPP)
 ```
 
-```
-## Warning: package 'pcaPP' was built under R version 3.4.4
-```
+## Functions
 
 
 ```r
@@ -576,6 +329,8 @@ computeMcwdAndAnomalies <- function(data, anoInScope = tibble(), anoSdInScope = 
 }
 ```
 
+## Loading TRMM precipitation data
+
 
 ```r
 # TRMM Data loading ----
@@ -621,6 +376,8 @@ trmm_cwd <- monthly_trmm %>%
   unnest(cwd_df)
 ```
 
+## Loading LandFlux EVAL AET data
+
 
 ```r
 et_raw <- nc_open("LandFluxEVAL.merged.89-05.monthly.all.nc")
@@ -637,6 +394,8 @@ amazon_et <- refineResolution(amazon_et, "totalEt")
 amazon_et <- cropTibbleToAmazonExtent(amazon_et)
 amazon_et$aet<-round(as.numeric(amazon_et$aet), 3)
 ```
+
+## Loading Princeton University PET data
 
 
 ```r
@@ -666,6 +425,8 @@ petForSpei <- cropTibbleToAmazonExtent(petForSpei) %>%
 speiComputed <- add_column(speiComputed, pet = petForSpei$pet)
 rm("petForSpei", 'ncfile')
 ```
+
+## Loading CRU PET and precipitation data
 
 
 ```r
@@ -710,6 +471,8 @@ speiCruComputed <- cbind(speiCruComputed, cruPet %>%
 
 rm('cruPreNc', 'cruPetNc', 'cruPre', 'cruPet')
 ```
+
+## Computing SPEI and SPI
 
 
 ```r
@@ -759,6 +522,8 @@ speiCruComputed$spei3[speiCruComputed$spei3 %in% c(Inf, -Inf)] <- NA
 #unreasonably high number of NA values epsecially with SPI - 22378, SPEI - 9987
 #input data is checked - no NA value present there
 ```
+
+## Compile the data ina single tibble
 
 
 ```r
@@ -817,6 +582,7 @@ amazonWD <- amazonWD %>%
   mutate(season = ifelse(month %in% c(4:9), "dry", "wet"))
 ```
 
+## Compute the MCWD monthly and annual anomalies
 
 ```r
 anomalies <- tibble()
@@ -839,7 +605,9 @@ amazonWD <- amazonWD %>%
   arrange(lon, lat, year, month)
 ```
 
-## Plots
+# Plots
+
+## Description of study area
 
 
 ```r
@@ -891,7 +659,7 @@ grid.arrange(annualPrecPlot, drySeasonLengthPlot, ncol=2)
 ## Warning: Removed 528 rows containing missing values (geom_tile).
 ```
 
-![](DroughtIndices_files/figure-html/dryMonthsAndAnnualRainfall-1.png)<!-- -->
+![\label{fig:figs} Description of the study area: rainfall in mm/ year and number of dry months averaged for the period 1998-2005 from TRMM precipitation dataset.](DroughtIndices_files/figure-html/dryMonthsAndAnnualRainfall-1.png)
 
 
 ```r
@@ -951,13 +719,18 @@ cwdRibbon <- amazonWD %>%
 grid.arrange(pPetRibbon, cwdRibbon, ncol=2)
 ```
 
-![](DroughtIndices_files/figure-html/seasonalFluctuations-1.png)<!-- -->
-<p style="font-size: large;">The figure above presents the annual cyclc of: </p>
-- Blue line - TRMM rainfall
-- Red line - Princeton University PET
-- Green line - LandFlux EVAL AET synthesis product
+![\label{fig:figs} Annual cycle of PET and precipitation (left) and annual cycle of AET and PET (right) over four regions of the Amazon. The division of the regions is based on -64.5° longitude and -7° latitude. The blue line shows precipitation, the red one - PET, and the green one - AET. The dotted lines highlight the 50, 100 and 150 mm/month values.](DroughtIndices_files/figure-html/seasonalFluctuations-1.png)
 
-<p style="font-size: large;">Next on is the correlation of annual MCWD anomalies.</p>
+The figure above presents the annual cyclc of:
+
+* Blue line - TRMM rainfall
+* Red line - Princeton University PET
+* Green line - LandFlux EVAL AET synthesis product
+
+## MCWD time series
+
+### Correlation of annual MCWD anomalies
+
 
 ```r
 #anomalies correlation plot---
@@ -988,7 +761,9 @@ corrplot(cor.fk(
 ## used
 ```
 
-![](DroughtIndices_files/figure-html/corrplotAnnualCwd-1.png)<!-- -->
+![\label{fig:figs} Correlation diagram of annual MCWD anomalies computed with different water deficit definition.](DroughtIndices_files/figure-html/corrplotAnnualCwd-1.png)
+
+### Annual MCWD values (in mm)
 
 
 ```r
@@ -1059,7 +834,9 @@ absDeviations %>%
 ## Warning: Removed 4041 rows containing missing values (geom_tile).
 ```
 
-![](DroughtIndices_files/figure-html/absDeviationsFromMean-1.png)<!-- -->
+![\label{fig:figs} Annual MCWD maps where the column names highlight the water deficit definition used for its computation. The measurement unit is mm.](DroughtIndices_files/figure-html/absDeviationsFromMean-1.png)
+
+### Annual MCWD (in standardized anomalies)
 
 
 ```r
@@ -1125,7 +902,9 @@ anomaliesSdBackUp %>%
 ## Warning: Removed 8448 rows containing missing values (geom_tile).
 ```
 
-![](DroughtIndices_files/figure-html/mcwdAnnualAnomalies-1.png)<!-- -->
+![\label{fig:figs} Annual MCWD maps measured in standard deviations from a long-term mean.](DroughtIndices_files/figure-html/mcwdAnnualAnomalies-1.png)
+
+### Monthly anomalies correlation
 
 
 ```r
@@ -1159,7 +938,9 @@ corrplot.mixed(cor.fk(indicesTimeSeries), order = "AOE", addrect = 3,
                tl.cex = 1, tl.pos = "lt", cl.cex = 1, number.cex = 0.8)
 ```
 
-![](DroughtIndices_files/figure-html/mcwdMonthlyAnomalies-1.png)<!-- -->
+![\label{fig:figs} Kendall's tau correlations between monthly MCWD anomalies and drought indices](DroughtIndices_files/figure-html/mcwdMonthlyAnomalies-1.png)
+
+### Test of parallel agreement
 
 
 ```r
@@ -1179,7 +960,42 @@ corrplot(gleichlaufigkeit,
          tl.col="black", tl.srt=90, tl.cex = 1, cl.cex = 1, number.cex = 0.9) #Text label color and rotation
 ```
 
-![](DroughtIndices_files/figure-html/gleichlaufigkeit-1.png)<!-- -->
+![\label{fig:figs} Test of parallel agreement (Gleichläufigkeit) between monthly MCWD anomalies and drought indices](DroughtIndices_files/figure-html/gleichlaufigkeit-1.png)
+
+## SPEI and SPI in 2005
+
+
+```r
+amazonWD %>%
+  select(lon, lat, year, month, SPEI03_T = speiTrmm03, SPI03_T = spiTrmm03, SPEI03_C = speiCru03, SPI03_C = spiCru03) %>%
+  filter(year == 2005 & month %in% c(6, 7, 8, 9, 10)) %>%
+  mutate(month = factor(ifelse(month == 6, "June",
+                               ifelse(month == 7, "July",
+                                      ifelse(month == 8, "August",
+                                             ifelse(month == 9, "September", "October")))), c("June", "July", "August", "September", "October"))) %>%
+  gather(source, value, c("SPEI03_T", "SPI03_T", "SPEI03_C", "SPI03_C")) %>%
+  mutate(source = factor(source, c("SPEI03_T", "SPI03_T", "SPEI03_C", "SPI03_C"))) %>%
+  regmap(region = "ama") +
+  geom_tile(aes(x = lon, y = lat, fill = value)) +
+  theme(strip.text.y = element_text(size = 16),
+        strip.text.x = element_text(size = 16),
+        axis.text.x.bottom = element_text(size = 12),
+        axis.text.y.left = element_text(size = 12),
+        axis.title.y.left = element_text(size = 12),
+        axis.title.x.bottom = element_text(size = 12)) +
+  scale_fill_gradient2() +
+  facet_grid(source~month)
+```
+
+```
+## Warning: Removed 1320 rows containing missing values (geom_tile).
+```
+
+![\label{fig:figs} Time series of the SPI03 and SPEI03 computed with different precipitation and PET data for the June-October period of 2005. The gray areas signify the lack of variance in the underlying data used for the SPI and SPEI computation.](DroughtIndices_files/figure-html/spiSpei-1.png)
+
+##Temporal development and spatial extent
+
+###Monthly MCWD, SPEI and SPI anomalies temporal development
 
 
 ```r
@@ -1258,7 +1074,9 @@ droughtLevelsFun <- function(colName = "", title = ""){
 do.call(ggarrange, c(plotlist = plots, nrow = 4, ncol = 5, common.legend = TRUE, legend = "bottom"))
 ```
 
-![](DroughtIndices_files/figure-html/monthlySeverityExtent-1.png)<!-- -->
+![\label{fig:figs} Temporal evolution of the different intensities of monthly SPI, SPEI and MCWD anomalies (expressed in standard deviations). The drought extent is given as the % of total area. The red dashed line signifies 50 percent areal coverage of the drought conditions.](DroughtIndices_files/figure-html/monthlySeverityExtent-1.png)
+
+### Spatial extent of the 2005 drought (Jun-Aug-Sep) (1)
 
 
 ```r
@@ -1321,7 +1139,9 @@ extent2005 <- amazonWD[complete.cases(amazonWD),] %>%
   facet_wrap(source~.)
 ```
 
-![](DroughtIndices_files/figure-html/summerSeverityExtent2005-1.png)<!-- -->
+![\label{fig:figs} Average areal coverage of the different intensities of monthly MCWD anomalies, SPEI and S for the 2005 dry season (JAS)](DroughtIndices_files/figure-html/summerSeverityExtent2005-1.png)
+
+### Spatial extent of the 2005 drought (Jun-Aug-Sep) (2)
 
 
 ```r
@@ -1347,12 +1167,14 @@ extent2005 %>%
          title = element_text(size = 28)) #+
 ```
 
-![](DroughtIndices_files/figure-html/summerAetPetSeverityExtent2005-1.png)<!-- -->
+![\label{fig:figs} Average areal coverage of the different intensities of 2005 dry season (JAS) MCWD anomalies computed with the AET-PET water deficit definition.](DroughtIndices_files/figure-html/summerAetPetSeverityExtent2005-1.png)
 
 ```r
    #geom_hline(yintercept=guideLine60[[1]], linetype=guideLine60[[2]], size=guideLine60[[3]], color = guideLine60[[4]]) +
    #geom_hline(yintercept=guideLine40[[1]], linetype=guideLine40[[2]], size=guideLine40[[3]], color = guideLine40[[4]])
 ```
+
+### Spatial extent of the 2005 drought (annual) (1)
 
 
 ```r
@@ -1418,7 +1240,9 @@ extent2005 %>%
   do.call(ggarrange, c(plotlist = absDeviationsPlots, nrow = 4, ncol = 4, common.legend = TRUE, legend = "bottom"))
 ```
 
-![](DroughtIndices_files/figure-html/annualSeverityExtent-1.png)<!-- -->
+![\label{fig:figs} Temporal evolution of the absolute values of the AMCWD (expressed as percentage of the whole area). The first two rows show the results of the TRMM-related MCWD time series and CWD_PR, whereas the bottom two - the CRU-related MCWDs.](DroughtIndices_files/figure-html/annualSeverityExtent-1.png)
+
+### Spatial extent of the 2005 drought (annual) (2)
 
 
 ```r
@@ -1466,7 +1290,9 @@ severityExtent %>%
   facet_wrap(source~.)
 ```
 
-![](DroughtIndices_files/figure-html/annualSeverityExtent2005-1.png)<!-- -->
+![\label{fig:figs} Areal coverage (in % of the total area) of the different intensities of annual MCWD values for 2005.](DroughtIndices_files/figure-html/annualSeverityExtent2005-1.png)
+
+### Annual MCWD anomalies temporal development
 
 
 ```r
@@ -1489,7 +1315,7 @@ severityExtent %>%
     strip.text = element_text(size = 24)) # +
 ```
 
-![](DroughtIndices_files/figure-html/annualAetPetSeverityExtent2005-1.png)<!-- -->
+![\label{fig:figs} Spatial extent in percent of the area of the different intensities of 2005 annual MCWD values computed with AET-PET water deficit.](DroughtIndices_files/figure-html/annualAetPetSeverityExtent2005-1.png)
 
 ```r
   # geom_hline(yintercept=60, linetype=guideLine40[[2]], size=guideLine40[[3]], color = guideLine40[[4]])
@@ -1525,6 +1351,10 @@ spatialCorrelation <- function(dataset, var1 = "", var2 = "", title = "", period
 }
 ```
 
+## Spatial correlation
+
+### Spatial correlation between monthly MCWD time series computed with same data
+
 
 ```r
 #Plotting of monthly anomalies of MCWD computed with TRMM against SPEI and SPI------
@@ -1549,7 +1379,9 @@ for (pairIndex in 1:length(SCPairs)) {
 do.call(ggarrange, c(plotlist = SCPlots, nrow = 2, ncol = 3, common.legend = TRUE, legend = "right"))
 ```
 
-![](DroughtIndices_files/figure-html/trmmMonthlyAnomaliesCorrelation-1.png)<!-- -->
+![\label{fig:figs} Spatial correlation of different monthly MCWD anomalies and drought indices presented in pairs.](DroughtIndices_files/figure-html/trmmMonthlyAnomaliesCorrelation-1.png)
+
+### Spatial correlation between same monthly MCWD time series computed with different data
 
 
 ```r
@@ -1587,7 +1419,9 @@ for (pairIndex in 1:length(SCPairsTrCru)) {
 do.call(ggarrange, c(plotlist = pl, nrow = 2, ncol = 4, common.legend = TRUE, legend = "right"))
 ```
 
-![](DroughtIndices_files/figure-html/sameMetricMonthlyAnomaliesSpatialCorr-1.png)<!-- -->
+![\label{fig:figs} Spatial correlation of monthly MCWD anomalies computed with TRMM and CRU products.](DroughtIndices_files/figure-html/sameMetricMonthlyAnomaliesSpatialCorr-1.png)
+
+### Spatial correlation between annual MCWD time series computed with same data
 
 
 ```r
@@ -1614,7 +1448,9 @@ for (pairIndex in 1:length(pairsTrmm)) {
 do.call(ggarrange, c(plotlist = p, nrow = 2, ncol = 3, common.legend = TRUE, legend = "right"))
 ```
 
-![](DroughtIndices_files/figure-html/trmmAnnualAnomaliesCorrelation-1.png)<!-- -->
+![\label{fig:figs} Spatial correlation of annual MCWD anomalies time series computed with TRMM, Princeton PET and LandFlux EVAL AET data. Values of 1 indicate high correlation, values lower than 0.5 indicate low correlation. The gray areas signify pixels, where either of the time series under comparison has no variance throughout the 1998-2005 period.](DroughtIndices_files/figure-html/trmmAnnualAnomaliesCorrelation-1.png)
+
+### Spatial correlation between same annual MCWD time series computed with different data
 
 
 ```r
@@ -1637,5 +1473,69 @@ for (pairIndex in 1:length(pairsTrmmVsCru)) {
 do.call(ggarrange, c(plotlist = pTrCr, nrow = 1, ncol = 4, common.legend = TRUE, legend = "right"))
 ```
 
-![](DroughtIndices_files/figure-html/sameMetricAnnualAnomaliesSpatialCorr-1.png)<!-- -->
+![\label{fig:figs} Spatial correlation of annual MCWD anomalies computed with TRMM and CRU products. The gray areas signify pixels, where either of the time series under comparison has no variance throughout the 1998-2005 period. The gray areas highlight pixels where one of the time series under comparison lacks variance for the whole length of the study period.](DroughtIndices_files/figure-html/sameMetricAnnualAnomaliesSpatialCorr-1.png)
 
+## Annexes
+
+
+```r
+#Agreement map between WDfixed_T and WDfixed_C in regards to pixels below -50 mm annual deviation of MCWD
+anomalies %>%
+  filter(year == 2005) %>%
+  select(lon, lat, year, preTrmm_et100_r, preCru_et100_r) %>%
+  mutate(agreement = ifelse(preTrmm_et100_r < -50 & preCru_et100_r < -50, "Confirmed by both",
+                            ifelse(preTrmm_et100_r < -50 | preCru_et100_r < -50, "Not confirmed",0))) %>%
+  filter(agreement != 0) %>%
+  mutate(agreement = factor(agreement, sort(unique(agreement), decreasing = FALSE))) %>%
+  select(lon, lat, agreement) %>%
+  regmap(region = "ama") +
+  geom_tile(aes(fill = agreement)) +
+  scale_fill_manual(values = c("firebrick1", "orange"), name = "Agreement") +
+  ggtitle("Agreement map between WDfixed_T and WDfixed_C\nin regards to pixels below -50 mm annual MCWD deviation")+
+  theme(title = element_text(size = 18),
+        axis.title.x.bottom = element_text(size = 14),
+        axis.title.y.left = element_text(size = 14))
+```
+
+```
+## Warning: Removed 37 rows containing missing values (geom_tile).
+```
+
+![](DroughtIndices_files/figure-html/annexes-1.png)<!-- -->
+
+```r
+#"Monthly values (rainfall and P) averaged over the whole Amazon basin (in mm)"
+pre <- amazonWD %>%
+  select(year, month, preTrmm, preCru) %>%
+  mutate(date = dmy(paste("01/", month, "/", year, sep = ""))) %>%
+  select(-year, -month) %>%
+  group_by(date) %>%
+  summarise("TRMM" = sum(preTrmm)/n(),
+            "CRU" = sum(preCru)/n()) %>%
+  gather(Precipitation, value, 2:3) %>%
+  ggplot() +
+  geom_line(aes(x = date, y = value, color = Precipitation), size = 2) +
+  ggtitle("Monthly rainfall values averaged over the whole Amazon basin (in mm)")+
+  theme(title = element_text(size = 18),
+        axis.title.x.bottom = element_text(size = 14),
+        axis.title.y.left = element_text(size = 14))
+  
+pet <- amazonWD %>%
+  select(year, month, pet, petCru) %>%
+  mutate(date = dmy(paste("01/", month, "/", year, sep = ""))) %>%
+  select(-year, -month) %>%
+  group_by(date) %>%
+  summarise("Princeton University" = sum(pet)/n(),
+            "CRU" = sum(petCru)/n()) %>%
+  gather(PET, value, 2:3) %>%
+  ggplot() +
+  geom_line(aes(x = date, y = value, color = PET), size = 2) +
+  ggtitle("Monthly PET values averaged over the whole Amazon basin (in mm)")+
+  theme(title = element_text(size = 18),
+        axis.title.x.bottom = element_text(size = 14),
+        axis.title.y.left = element_text(size = 14))
+
+ggarrange(pre, pet, nrow = 2)
+```
+
+![](DroughtIndices_files/figure-html/annexes-2.png)<!-- -->
