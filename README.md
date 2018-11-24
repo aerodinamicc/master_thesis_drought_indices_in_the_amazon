@@ -1,3 +1,12 @@
+---
+output: 
+  html_document: 
+    keep_md: yes
+    fig_caption: yes
+    toc: true
+    toc_depth: 3
+---
+
 <p style="text-align: center; font-size: x-large;"> Drought stress in the Amazon rainforest </p>
 
 <p style="text-align: center; font-size: large;"> An evaluation of different drought metrics and datasets </p>
