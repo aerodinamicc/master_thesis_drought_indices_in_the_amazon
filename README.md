@@ -1,34 +1,34 @@
 # Table of contents
 1. [Preparation](#Preparation)
 	* [Functions](#Functions)
-	* [Loading TRMM precipitation data](#Loading TRMM precipitation data)
-	* [Loading LandFlux EVAL AET data](#Loading LandFlux EVAL AET data)
-	* [Loading Princeton University PET data](#Loading Princeton University PET data)
-	* [Loading CRU PET and precipitation data](#Loading CRU PET and precipitation data)
-	* [Computing SPEI and SPI](#Computing SPEI and SPI)
-	* [Compile the data ina single tibble](#Compile the data ina single tibble)
-	* [Compute the MCWD monthly and annual anomalies](#Compute the MCWD monthly and annual anomalies)
+	* [Loading TRMM precipitation data](#1)
+	* [Loading LandFlux EVAL AET data](#2)
+	* [Loading Princeton University PET data](#3)
+	* [Loading CRU PET and precipitation data](#4)
+	* [Computing SPEI and SPI](#5)
+	* [Compile the data ina single tibble](#6)
+	* [Compute the MCWD monthly and annual anomalies](#7)
 2. [Plots](#Plots)
-	* [Description of study area](#Description of study area)
-	* [MCWD time series](#MCWD time series)
-		* [Correlation of annual MCWD anomalies](#Correlation of annual MCWD anomalies)
-		* [Annual MCWD values (in mm)](#Annual MCWD values (in mm))
-		* [Annual MCWD (in standardized anomalies)](#Annual MCWD (in standardized anomalies))
-		* [Monthly anomalies correlation](#Monthly anomalies correlation)
-		* [Test of parallel agreement](#Test of parallel agreement)
-	* [SPEI and SPI in 2005](#SPEI and SPI in 2005)
-	* [Temporal development and spatial extent](#Temporal development and spatial extent)
-		* [Monthly MCWD, SPEI and SPI anomalies temporal development](#Monthly MCWD, SPEI and SPI anomalies temporal development)
-		* [Spatial extent of the 2005 drought (Jun-Aug-Sep) (1)](#Spatial extent of the 2005 drought (Jun-Aug-Sep) (1))
-		* [Spatial extent of the 2005 drought (Jun-Aug-Sep) (2)](#Spatial extent of the 2005 drought (Jun-Aug-Sep) (2))
-		* [Spatial extent of the 2005 drought (annual) (1)](#Spatial extent of the 2005 drought (annual) (1))
-		* [Spatial extent of the 2005 drought (annual) (2)](#Spatial extent of the 2005 drought (annual) (2))
-		* [Annual MCWD anomalies temporal development](#Annual MCWD anomalies temporal development)
-	* [Spatial correlation](#Spatial correlation)
-		* [Spatial correlation between monthly MCWD time series computed with same data](#Spatial correlation between monthly MCWD time series computed with same data)
-		* [Spatial correlation between same monthly MCWD time series computed with different data](#Spatial correlation between same monthly MCWD time series computed with different data)
-		* [Spatial correlation between annual MCWD time series computed with same data](#Spatial correlation between annual MCWD time series computed with same data)
-		* [Spatial correlation between same annual MCWD time series computed with different data](#Spatial correlation between same annual MCWD time series computed with different data)
+	* [Description of study area](#8)
+	* [MCWD time series](#9)
+		* [Correlation of annual MCWD anomalies](#10)
+		* [Annual MCWD values (in mm)](#11)
+		* [Annual MCWD (in standardized anomalies)](#12)
+		* [Monthly anomalies correlation](#13)
+		* [Test of parallel agreement](#14)
+	* [SPEI and SPI in 2005](#15)
+	* [Temporal development and spatial extent](#16)
+		* [Monthly MCWD, SPEI and SPI anomalies temporal development](#17)
+		* [Spatial extent of the 2005 drought (Jun-Aug-Sep) (1)](#18)
+		* [Spatial extent of the 2005 drought (Jun-Aug-Sep) (2)](#19)
+		* [Spatial extent of the 2005 drought (annual) (1)](#20)
+		* [Spatial extent of the 2005 drought (annual) (2)](#21)
+		* [Annual MCWD anomalies temporal development](#22)
+	* [Spatial correlation](#23)
+		* [Spatial correlation between monthly MCWD time series computed with same data](#24)
+		* [Spatial correlation between same monthly MCWD time series computed with different data](#25)
+		* [Spatial correlation between annual MCWD time series computed with same data](#26)
+		* [Spatial correlation between same annual MCWD time series computed with different data](#27)
 	* [Annexes](#Annexes)
 
 <p style="text-align: center; font-size: x-large;"> Drought stress in the Amazon rainforest </p>
@@ -362,7 +362,7 @@ computeMcwdAndAnomalies <- function(data, anoInScope = tibble(), anoSdInScope = 
 }
 ```
 
-## Loading TRMM precipitation data
+## Loading TRMM precipitation data <a name="1"></a>
 
 
 ```r
@@ -409,7 +409,7 @@ trmm_cwd <- monthly_trmm %>%
   unnest(cwd_df)
 ```
 
-## Loading LandFlux EVAL AET data
+## Loading LandFlux EVAL AET data<a name="2"></a>
 
 
 ```r
@@ -428,7 +428,7 @@ amazon_et <- cropTibbleToAmazonExtent(amazon_et)
 amazon_et$aet<-round(as.numeric(amazon_et$aet), 3)
 ```
 
-## Loading Princeton University PET data
+## Loading Princeton University PET data<a name="3"></a>
 
 
 ```r
@@ -459,7 +459,7 @@ speiComputed <- add_column(speiComputed, pet = petForSpei$pet)
 rm("petForSpei", 'ncfile')
 ```
 
-## Loading CRU PET and precipitation data
+## Loading CRU PET and precipitation data<a name="4"></a>
 
 
 ```r
@@ -505,7 +505,7 @@ speiCruComputed <- cbind(speiCruComputed, cruPet %>%
 rm('cruPreNc', 'cruPetNc', 'cruPre', 'cruPet')
 ```
 
-## Computing SPEI and SPI
+## Computing SPEI and SPI <a name="5"></a>
 
 
 ```r
@@ -556,7 +556,7 @@ speiCruComputed$spei3[speiCruComputed$spei3 %in% c(Inf, -Inf)] <- NA
 #input data is checked - no NA value present there
 ```
 
-## Compile the data ina single tibble
+## Compile the data in a single tibble <a name="6"></a>
 
 
 ```r
@@ -615,7 +615,7 @@ amazonWD <- amazonWD %>%
   mutate(season = ifelse(month %in% c(4:9), "dry", "wet"))
 ```
 
-## Compute the MCWD monthly and annual anomalies
+## Compute the MCWD monthly and annual anomalies <a name="7"></a>
 
 ```r
 anomalies <- tibble()
@@ -640,7 +640,7 @@ amazonWD <- amazonWD %>%
 
 # Plots
 
-## Description of study area
+## Description of study area<a name="8"></a>
 
 
 ```r
@@ -762,9 +762,9 @@ The figure above presents the annual cyclc of:
 * Red line - Princeton University PET
 * Green line - LandFlux EVAL AET synthesis product
 
-## MCWD time series
+## MCWD time series<a name="9"></a>
 
-### Correlation of annual MCWD anomalies
+### Correlation of annual MCWD anomalies<a name="10"></a>
 
 
 ```r
@@ -799,7 +799,7 @@ corrplot(cor.fk(
 ![](DroughtIndices_files/figure-html/corrplotAnnualCwd-1.png)<!-- -->
 Correlation diagram of annual MCWD anomalies computed with different water deficit definition.
 
-### Annual MCWD values (in mm)
+### Annual MCWD values (in mm)<a name="11"></a> 
 
 
 ```r
@@ -873,7 +873,7 @@ absDeviations %>%
 ![](DroughtIndices_files/figure-html/absDeviationsFromMean-1.png)<!-- -->
 Annual MCWD maps where the column names highlight the water deficit definition used for its computation. The measurement unit is mm.
 
-### Annual MCWD (in standardized anomalies)
+### Annual MCWD (in standardized anomalies)<a name="12"></a>
 
 
 ```r
@@ -942,7 +942,7 @@ anomaliesSdBackUp %>%
 ![](DroughtIndices_files/figure-html/mcwdAnnualAnomalies-1.png)<!-- -->
 Annual MCWD maps measured in standard deviations from a long-term mean.
 
-### Monthly anomalies correlation
+### Monthly anomalies correlation<a name="13"></a>
 
 
 ```r
@@ -979,7 +979,7 @@ corrplot.mixed(cor.fk(indicesTimeSeries), order = "AOE", addrect = 3,
 ![](DroughtIndices_files/figure-html/mcwdMonthlyAnomalies-1.png)<!-- -->
 Kendall's tau correlations between monthly MCWD anomalies and drought indices
 
-### Test of parallel agreement
+### Test of parallel agreement<a name="14"></a>
 
 
 ```r
@@ -1002,7 +1002,7 @@ corrplot(gleichlaufigkeit,
 ![](DroughtIndices_files/figure-html/gleichlaufigkeit-1.png)<!-- -->
 Test of parallel agreement (Gleichläufigkeit) between monthly MCWD anomalies and drought indices
 
-## SPEI and SPI in 2005
+## SPEI and SPI in 2005<a name="15"></a>
 
 
 ```r
@@ -1034,9 +1034,9 @@ amazonWD %>%
 ![](DroughtIndices_files/figure-html/spiSpei-1.png)<!-- -->
 Time series of the SPI03 and SPEI03 computed with different precipitation and PET data for the June-October period of 2005. The gray areas signify the lack of variance in the underlying data used for the SPI and SPEI computation.
 
-## Temporal development and spatial extent
+## Temporal development and spatial extent<a name="16"></a>
 
-### Monthly MCWD, SPEI and SPI anomalies temporal development
+### Monthly MCWD, SPEI and SPI anomalies temporal development<a name="17"></a>
 
 
 ```r
@@ -1118,7 +1118,7 @@ do.call(ggarrange, c(plotlist = plots, nrow = 4, ncol = 5, common.legend = TRUE,
 ![](DroughtIndices_files/figure-html/monthlySeverityExtent-1.png)<!-- -->
 Temporal evolution of the different intensities of monthly SPI, SPEI and MCWD anomalies (expressed in standard deviations). The drought extent is given as the % of total area. The red dashed line signifies 50 percent areal coverage of the drought conditions.
 
-### Spatial extent of the 2005 drought (Jun-Aug-Sep) (1)
+### Spatial extent of the 2005 drought (Jun-Aug-Sep) (1)<a name="18"></a>
 
 
 ```r
@@ -1184,7 +1184,7 @@ extent2005 <- amazonWD[complete.cases(amazonWD),] %>%
 ![](DroughtIndices_files/figure-html/summerSeverityExtent2005-1.png)<!-- -->
 Average areal coverage of the different intensities of monthly MCWD anomalies, SPEI and S for the 2005 dry season (JAS)
 
-### Spatial extent of the 2005 drought (Jun-Aug-Sep) (2)
+### Spatial extent of the 2005 drought (Jun-Aug-Sep) (2)<a name="19"></a>
 
 
 ```r
@@ -1218,7 +1218,7 @@ extent2005 %>%
 ```
 Average areal coverage of the different intensities of 2005 dry season (JAS) MCWD anomalies computed with the AET-PET water deficit definition.
 
-### Spatial extent of the 2005 drought (annual) (1)
+### Spatial extent of the 2005 drought (annual) (1)<a name="20"></a>
 
 
 ```r
@@ -1287,7 +1287,7 @@ Average areal coverage of the different intensities of 2005 dry season (JAS) MCW
 ![](DroughtIndices_files/figure-html/annualSeverityExtent-1.png)<!-- -->
 Temporal evolution of the absolute values of the AMCWD (expressed as percentage of the whole area). The first two rows show the results of the TRMM-related MCWD time series and CWD_PR, whereas the bottom two - the CRU-related MCWDs.
 
-### Spatial extent of the 2005 drought (annual) (2)
+### Spatial extent of the 2005 drought (annual) (2) <a name="21"></a>
 
 
 ```r
@@ -1338,7 +1338,7 @@ severityExtent %>%
 ![](DroughtIndices_files/figure-html/annualSeverityExtent2005-1.png)<!-- -->
 Areal coverage (in % of the total area) of the different intensities of annual MCWD values for 2005.
 
-### Annual MCWD anomalies temporal development
+### Annual MCWD anomalies temporal development<a name="22"></a>
 
 
 ```r
@@ -1398,9 +1398,9 @@ spatialCorrelation <- function(dataset, var1 = "", var2 = "", title = "", period
 }
 ```
 
-## Spatial correlation
+## Spatial correlation<a name="23"></a>
 
-### Spatial correlation between monthly MCWD time series computed with same data
+### Spatial correlation between monthly MCWD time series computed with same data<a name="24"></a>
 
 
 ```r
@@ -1429,7 +1429,7 @@ do.call(ggarrange, c(plotlist = SCPlots, nrow = 2, ncol = 3, common.legend = TRU
 ![](DroughtIndices_files/figure-html/trmmMonthlyAnomaliesCorrelation-1.png)<!-- -->
 Spatial correlation of different monthly MCWD anomalies and drought indices presented in pairs.
 
-### Spatial correlation between same monthly MCWD time series computed with different data
+### Spatial correlation between same monthly MCWD time series computed with different data<a name="25"></a>
 
 
 ```r
@@ -1470,7 +1470,7 @@ do.call(ggarrange, c(plotlist = pl, nrow = 2, ncol = 4, common.legend = TRUE, le
 ![](DroughtIndices_files/figure-html/sameMetricMonthlyAnomaliesSpatialCorr-1.png)<!-- -->
 Spatial correlation of monthly MCWD anomalies computed with TRMM and CRU products.
 
-### Spatial correlation between annual MCWD time series computed with same data
+### Spatial correlation between annual MCWD time series computed with same data<a name="26"></a>
 
 
 ```r
@@ -1500,7 +1500,7 @@ do.call(ggarrange, c(plotlist = p, nrow = 2, ncol = 3, common.legend = TRUE, leg
 ![](DroughtIndices_files/figure-html/trmmAnnualAnomaliesCorrelation-1.png)<!-- -->
 Spatial correlation of annual MCWD anomalies time series computed with TRMM, Princeton PET and LandFlux EVAL AET data. Values of 1 indicate high correlation, values lower than 0.5 indicate low correlation. The gray areas signify pixels, where either of the time series under comparison has no variance throughout the 1998-2005 period.
 
-### Spatial correlation between same annual MCWD time series computed with different data
+### Spatial correlation between same annual MCWD time series computed with different data<a name="27"></a>
 
 
 ```r
